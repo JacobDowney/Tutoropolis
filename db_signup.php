@@ -15,7 +15,8 @@ if (isset($_POST["submit"])) {
   require_once 'db_functions.php';
 
   // Checking for empty inputs
-  if (emptyInputSignup($username, $password, $repassword, $firstName, $lastName, $phoneNumber, $email, $biography) !== false) {
+  $arr = array($username, $password, $repassword, $firstName, $lastName, $phoneNumber, $email, $biography);
+  if (emptyInputs($arr) !== false) {
     header("location: welcome.php?error=emptyinput");
     exit();
   }

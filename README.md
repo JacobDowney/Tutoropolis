@@ -3,8 +3,8 @@
 - Front end for every Page
 
 welcome.php
-  - Login form with db_login.php
-  - Signup form with db_signup.php
+  DONE: Login form with db_login.php
+  DONE: Signup form with db_signup.php
 
 home.php
   - query for current and old sessions

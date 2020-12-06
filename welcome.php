@@ -16,6 +16,12 @@
     // Code for checking if user logged out
     if (isset($_GET["error"])) {
       if ($_GET["error"] == "logout") {
+        // We can't delete session without starting it
+        session_start();
+        // Delete any session variables we have
+        session_unset();
+        // Destroy the session.
+        session_destroy();
         echo "<h2>You have successfully logged out!</h2>";
       }
     }

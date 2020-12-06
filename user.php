@@ -1,3 +1,15 @@
+<?php
+  // TODO: This should be in an include header.php
+
+  // Start session to get session data
+  session_start();
+  // Check if user is logged in and if not go to welcome page
+  if (!isset($_SESSION["userID"]) || !isset($_SESSION["username"])) {
+    header("location: welcome.php");
+    exit();
+  }
+?>
+
 <!DOCTYPE html>
 
 <html>
@@ -24,7 +36,11 @@
     <a href="welcome.php?error=logout">Logout</a>
   </div>
 
-
+  <div class="hello-message">
+    <?php
+      echo "<h2>Hello there " . $_SESSION["username"] . "</h2>";
+    ?>
+  </div>
 
   <div class="update-user-info-form">
     <h1>My user info (comes from sql query)</h1>

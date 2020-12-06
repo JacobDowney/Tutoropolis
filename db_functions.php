@@ -1,16 +1,13 @@
 <?php
 
-// Checks if any of the fields are empty
-function emptyInputSignup($username, $password, $repassword, $firstName,
-                          $lastName, $phoneNumber, $email, $biography) {
-  $result;
-  // If any field is empty return true, else false
-  if (empty($username) || empty($password) || empty($repassword)
-      || empty($firstName) || empty($lastName) || empty($phoneNumber)
-      || empty($email) || empty($biography)) {
-    $result = true;
-  } else {
-    $result = false;
+// Checks for empty fields
+function emptyInputs($fields) {
+  $result = false;
+  foreach ($element as $fields) {
+    if (empty($element)) {
+      $return = true;
+      break;
+    }
   }
   return $result;
 }
@@ -122,18 +119,6 @@ function createUser($conn, $username, $password, $firstName, $lastName,
   exit();
 }
 
-// Check for an empty username or password
-function emptyInputLogin($username, $password) {
-  $result;
-  // If any field is empty return true, else false
-  if (empty($username) || empty($password)) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
-}
-
 // Gets the user information and then logs in that user and goes to home.php
 // with a session started with user info with it.
 function loginUser($conn, $username, $password) {
@@ -164,6 +149,45 @@ function loginUser($conn, $username, $password) {
     header("location: home.php");
     exit();
   }
+}
+
+// Gets the subject data for a given subject
+function getSubjectID($conn, $subject) {
+  $sql = "SELECT * FROM Subject S WHERE S.subject = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "s", $subject);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    $result = false;
+    return $result;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+// Creates a tutor proposal in the database and redirects to the tutor.php
+// with no error if it worked.
+function createTutorProposal($conn, $tutorUserID, $subjectID, $description) {
+  $sql = "INSERT INTO
+              TutoringProposal (tutorUserID, subjectID, description)
+          VALUES
+              (?, ?, ?);";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "iis", $tutorUserID, $subjectID, $description);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=none");
+  exit();
 }
 
 
