@@ -4,7 +4,7 @@
 
 <head>
   <title>Welcome Page</title>
-  <!Add later: <link rel="stylesheet" type="text/css" href="css/welcome.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -13,8 +13,8 @@
   <h2>Helping Tutors & Students Connect</h2>
 
   <div class="create-user-form">
-    <h1>Create user</h1>
-    <form>
+    <h1>Sign up</h1>
+    <form action="signup.php" method="post">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" />
@@ -49,7 +49,7 @@
 
   <div class="login-form">
     <h1>Login</h1>
-    <form>
+    <form action="login.php" method="post">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" />

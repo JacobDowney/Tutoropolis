@@ -1,4 +1,14 @@
 <?php
+  include_once 'db.php';
+
+  // Check that the user got to the page the proper way
+  if (isset($_POST["submit"])) {
+    echo "it works";
+
+  } else {
+    
+  }
+
   $username     = $_POST['username'];
   $password     = $_POST['password'];
   $firstName    = $_POST['firstName'];
@@ -7,8 +17,6 @@
   $email        = $_POST['email'];
   $biography    = $_POST['biography'];
 
-  // Database connection
-  $conn = new mysqli('localhost', 'root', '', 'test');
   if ($conn->connect_error) {
     die('Connection Failed : '.$conn->connect_error);
   } else {
