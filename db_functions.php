@@ -129,5 +129,55 @@ function createTutorProposal($conn, $tutorUserID, $subjectID, $description) {
   exit();
 }
 
+// Gets all tutor proposals
+function getAllTutorProposals($conn) {
+  $sql = "SELECT * FROM TutoringProposal";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  return mysqli_fetch_all($resultData, MYSQLI_ASSOC);
+  mysqli_stmt_close($stmt);
+}
+
+function getUserInfo($conn, $userID) {
+  $sql = "SELECT * FROM User U WHERE U.userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $userID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function getSubjectInfo($conn, $subjectID) {
+  $sql = "SELECT * FROM Subject S WHERE S.subjectID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $subjectID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
 
 ?>

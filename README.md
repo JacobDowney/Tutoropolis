@@ -3,8 +3,8 @@
 - Front end for every Page
 
 welcome.php
-  DONE: Login form with db_login.php
-  DONE: Signup form with db_signup.php
+  - DONE: Login form with db_login.php
+  - DONE: Signup form with db_signup.php
 
 home.php
   - query for current and old sessions
@@ -14,6 +14,6 @@ user.php
   - update if pushed new user data
 
 tutor.php
-  - insert new tutor proposal
+  - DONE: insert new tutor proposal
   - query for all tutor proposals
   - create new session for proposal if selected

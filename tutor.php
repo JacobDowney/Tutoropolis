@@ -84,41 +84,47 @@
   </div>
 
   <h2>Table of tutor info (comes from sql query)</h2>
+  <p>Phone number and email will be shown once a session begins</p>
 
-  <table class="tutor-proposal-table">
+  <table border=1 class="tutor-proposal-table">
     <tr class="tutor-proposal-table-labels">
       <th>Username</th>
       <th>First Name</th>
+      <th>Last Name</th>
+      <th>Subject</th>
+      <th>Description</th>
+      <th>Session</th>
     </tr>
+
+    <?php
+      require_once 'db_handler.php';
+      require_once 'db_functions.php';
+
+      $allTutoringProposals = getAllTutorProposals($conn);
+      foreach ($tutoringProposal as $allTutoringProposals) {
+        $userInfo = getUserInfo($conn, $tutoringProposal['tutorUserID']);
+        if ($userInfo === false) {
+          continue;
+        }
+        $subjectInfo = getSubjectInfo($conn, $tutoringProposal['subjectID']);
+        if ($subjectInfo === false) {
+          continue;
+        }
+        echo "<tr class=\"tutor-proposal-table-labels\">";
+        echo "<td>" . $userInfo['username'] . <"</td>";
+        echo "<td>" . $userInfo['firstName'] . <"</td>";
+        echo "<td>" . $userInfo['lastName'] . <"</td>";
+        echo "<td>" . $subjectInfo['subject'] . <"</td>";
+        echo "<td>" . $tutoringProposal['description'] . <"</td>";
+        echo "<td>" . "OK" . <"</td>";
+        echo "</tr>";
+      }
+    ?>
 
     <tbody id="tutor-proposal-table-items">
     </tbody>
 
   </table>
-
-  <script>
-    document.getElementById('tt').style.color = "red";
-    var testArray = [
-      {'username':'jacobdowney', 'firstName':'jacob'}
-    ]
-    buildTable(testArray)
-    // <th>Last Name</th>
-    // <th>Subject</th>
-    // <th>Description</th>
-    // <th>Phone Number</th>
-    // <th>Email</th>
-    // <th>Session</th>
-    function buildTable(data) {
-      var table = document.getElementById('tutor-proposal-table-items')
-      for (var i = 0; i < data.length; i++) {
-        var row = '<tr>
-                      <td>${data[i].username}</td>
-                      <td>${data[i].firstName}</td>
-                  </tr>'
-        table.innerHTML += row
-      }
-    }
-  </script>
 
 </body>
 
