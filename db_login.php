@@ -1,6 +1,5 @@
 <?php
 
-
 // Check that the user got to the page the proper way
 if (isset($_POST["submit"])) {
   $username     = $_POST['loginUsername'];
@@ -9,7 +8,13 @@ if (isset($_POST["submit"])) {
   require_once 'db_handler.php';
   require_once 'db_functions.php';
 
-  echo "made it $username $password";
+  // Checking for empty inputs
+  if (emptyInputLogin($username, $password) !== false) {
+    header("location: welcome.php?error=emptyinput");
+    exit();
+  }
+
+  loginUser($conn, $username, $password);
 
 } else {
   header("location: welcome.php");

@@ -1,5 +1,6 @@
 <?php
 
+// Checks if any of the fields are empty
 function emptyInputSignup($username, $password, $repassword, $firstName,
                           $lastName, $phoneNumber, $email, $biography) {
   $result;
@@ -63,7 +64,7 @@ function strongPassword($password) {
 // Queries the sql database to see if the username exists
 function usernameExists($conn, $username) {
   // Use a prepare statement to protect from sql injection
-  $sql = "SELECT * FROM User U WHERE U.userID = ?;";
+  $sql = "SELECT * FROM User U WHERE U.username = ?;";
   // Initialize the sql statement
   $statement = mysqli_stmt_init($conn);
   // Check for mistake in sql statement
@@ -80,6 +81,7 @@ function usernameExists($conn, $username) {
   // Check if there is a result from the statement
   if ($row = mysqli_fetch_assoc($resultData)) {
     // This would be used for the login, this would return the user data
+    // For sign up this will make next return false.
     return $row;
   } else {
     // This is the result we want for sign up
@@ -90,6 +92,7 @@ function usernameExists($conn, $username) {
   mysqli_stmt_close($statement);
 }
 
+// Creates the user with the given information
 function createUser($conn, $username, $password, $firstName, $lastName,
                     $phoneNumber, $email, $biography) {
   // Use a prepare statement to protect from sql injection
@@ -117,6 +120,50 @@ function createUser($conn, $username, $password, $firstName, $lastName,
   mysqli_stmt_close($statement);
   header("location: welcome.php?error=none");
   exit();
+}
+
+// Check for an empty username or password
+function emptyInputLogin($username, $password) {
+  $result;
+  // If any field is empty return true, else false
+  if (empty($username) || empty($password)) {
+    $result = true;
+  } else {
+    $result = false;
+  }
+  return $result;
+}
+
+// Gets the user information and then logs in that user and goes to home.php
+// with a session started with user info with it.
+function loginUser($conn, $username, $password) {
+  // usernameExists will return either an error if there is something wrong,
+  // false if there is no user with that username (which means we here should
+  // say there is an error because we can't log in to no user), or the user data
+  // that was selected from the sql database.
+  $userExists = usernameExists($conn, $username);
+  // Check if user doesn't exist
+  if ($userExists === false) {
+    header("location: welcome.php?error=wronglogin");
+    exit();
+  }
+  // Associated aray is like a map
+  $hashedPassword = $userExists["password"];
+  $checkPassword = password_verify($password, $hashedPassword);
+  // Check if the two passwords are different
+  if ($checkPassword === false) {
+    header("location: welcome.php?error=wrongpassword");
+    exit();
+  } else if ($checkPassword === true) {
+    // Now we want to log the user into the website, start a session!
+    session_start();
+    // Store the user's id and username for the session
+    $_SESSION["userID"] = $userExists["userID"];
+    $_SESSION["username"] = $userExists["username"];
+    // Log the user into the home of their website now that session is started
+    header("location: home.php");
+    exit();
+  }
 }
 
 
