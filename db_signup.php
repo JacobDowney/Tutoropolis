@@ -21,22 +21,22 @@ if (isset($_POST["submit"])) {
     exit();
   }
   // Checking for invalid username
-  if (invalidUsername($username) !== false) {
+  if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
     header("location: welcome.php?error=invalidusername");
     exit();
   }
   // Checking for invalid email
-  if (invalidEmail($email) !== false) {
+  if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
     header("location: welcome.php?error=invalidemail");
     exit();
   }
   // Checking if passwords match
-  if (passwordMatch($password, $repassword) !== false) {
+  if ($password !== $repassword) {
     header("location: welcome.php?error=passwordsdontmatch");
     exit();
   }
   // Checking if password is strong
-  if (strongPassword($password) !== false) {
+  if (strlen($password) < 8) {
     header("location: welcome.php?error=passwordweak");
     exit();
   }
