@@ -12,16 +12,16 @@
   <h1 id='tt'>Tutoropolis</h1>
 
   <div class="menu-button">
-    <a href="home.html">Home</a>
+    <a href="home.php">Home</a>
   </div>
   <div class="menu-button">
-    <a href="tutor.html">Tutors</a>
+    <a href="tutor.php">Tutors</a>
   </div>
   <div class="menu-button">
-    <a href="user.html">User</a>
+    <a href="user.php">User</a>
   </div>
   <div class="menu-button">
-    <a href="welcome.html">Logout</a>
+    <a href="welcome.php?error=logout">Logout</a>
   </div>
 
   <div class="tutor-proposal-form">

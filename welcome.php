@@ -12,6 +12,15 @@
   <h1>Tutoropolis</h1>
   <h2>Helping Tutors & Students Connect</h2>
 
+  <?php
+    // Code for checking if user logged out
+    if (isset($_GET["error"])) {
+      if ($_GET["error"] == "logout") {
+        echo "<h2>You have successfully logged out!</h2>";
+      }
+    }
+  ?>
+
   <div class="create-user-form">
     <h1>Sign up</h1>
     <form action="db_signup.php" method="post">
@@ -49,6 +58,28 @@
       </div>
       <button type="submit" name="submit" class="submit-button">Sign Up</button>
     </form>
+    <?php
+      // Code for error checking
+      if (isset($_GET["error"])) {
+        if ($_GET["error"] == "emptyinput") {
+          echo "<p>Fill in all fields!</p>";
+        } else if ($_GET["error"] == "invalidusername") {
+          echo "<p>Choose a proper username!</p>";
+        } else if ($_GET["error"] == "invalidemail") {
+          echo "<p>Choose a proper email!</p>";
+        } else if ($_GET["error"] == "passwordsdontmatch") {
+          echo "<p>Passwords don't match!</p>";
+        } else if ($_GET["error"] == "passwordweak") {
+          echo "<p>Password must be 8 characters long!</p>";
+        } else if ($_GET["error"] == "stmtfailed") {
+          echo "<p>Something went wrong, try again!</p>";
+        } else if ($_GET["error"] == "usernametaken") {
+          echo "<p>Username taken, choose another username!</p>";
+        } else if ($_GET["error"] == "none") {
+          echo "<p>You have signed up! Please Log In!</p>";
+        }
+      }
+    ?>
   </div>
 
   <div class="login-form">
@@ -64,6 +95,18 @@
       </div>
       <button type="submit" name="submit" class="submit-button">Log In</button>
     </form>
+    <?php
+      // Code for error checking
+      if (isset($_GET["error"])) {
+        if ($_GET["error"] == "emptyinput") {
+          echo "<p>Fill in all fields!</p>";
+        } else if ($_GET["error"] == "wronglogin") {
+          echo "<p>Failed to find user from username!</p>";
+        } else if ($_GET["error"] == "wrongpassword") {
+          echo "<p>Username and password don't match!</p>";
+        }
+      }
+    ?>
   </div>
 
 </body>
