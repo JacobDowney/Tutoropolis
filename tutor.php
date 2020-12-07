@@ -86,8 +86,8 @@
   <h2>Table of tutor info (comes from sql query)</h2>
   <p>Phone number and email will be shown once a session begins</p>
 
-  <table border=1 class="tutor-proposal-table">
-    <tr class="tutor-proposal-table-labels">
+  <table border=1 class=\"tutor-proposal-table\">
+    <tr class=\"tutor-proposal-table-labels\">
       <th>Username</th>
       <th>First Name</th>
       <th>Last Name</th>
@@ -96,33 +96,30 @@
       <th>Session</th>
     </tr>
 
-    <?php
-      require_once 'db_handler.php';
-      require_once 'db_functions.php';
+  <?php
+    require_once 'db_handler.php';
+    require_once 'db_functions.php';
 
-      $allTutoringProposals = getAllTutorProposals($conn);
-      foreach ($tutoringProposal as $allTutoringProposals) {
-        $userInfo = getUserInfo($conn, $tutoringProposal['tutorUserID']);
-        if ($userInfo === false) {
-          continue;
-        }
-        $subjectInfo = getSubjectInfo($conn, $tutoringProposal['subjectID']);
-        if ($subjectInfo === false) {
-          continue;
-        }
-        echo "<tr class=\"tutor-proposal-table-labels\">";
-        echo "<td>" . $userInfo['username'] . <"</td>";
-        echo "<td>" . $userInfo['firstName'] . <"</td>";
-        echo "<td>" . $userInfo['lastName'] . <"</td>";
-        echo "<td>" . $subjectInfo['subject'] . <"</td>";
-        echo "<td>" . $tutoringProposal['description'] . <"</td>";
-        echo "<td>" . "OK" . <"</td>";
-        echo "</tr>";
+    $allTutoringProposals = getAllTutorProposals($conn);
+    foreach ($allTutoringProposals as $tutoringProposal) {
+      $userInfo = getUserInfo($conn, $tutoringProposal['tutorUserID']);
+      if ($userInfo === false) {
+        continue;
       }
-    ?>
-
-    <tbody id="tutor-proposal-table-items">
-    </tbody>
+      $subjectInfo = getSubjectInfo($conn, $tutoringProposal['subjectID']);
+      if ($subjectInfo === false) {
+        continue;
+      }
+      echo "<tr class=\"tutor-proposal-table-labels\">";
+      echo "<td>" . $userInfo['username'] . "</td>";
+      echo "<td>" . $userInfo['firstName'] . "</td>";
+      echo "<td>" . $userInfo['lastName'] . "</td>";
+      echo "<td>" . $subjectInfo['subject'] . "</td>";
+      echo "<td>" . $tutoringProposal['description'] . "</td>";
+      echo "<td>" . "OK" . "</td>";
+      echo "</tr>";
+    }
+  ?>
 
   </table>
 
