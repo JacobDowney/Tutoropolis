@@ -97,6 +97,17 @@
     </tr>
 
   <?php
+    // Code for error checking for sessions
+    if (isset($_GET["error"])) {
+      if ($_GET["error"] == "nonesession") {
+        echo "<p>Created the session!</p>";
+      } else if ($_GET["error"] == "idsmatch") {
+        echo "<p>You can't tutor yourself!</p>";
+      } else if ($_GET["error"] == "sessionstmtfailed") {
+        echo "<p>Something went wrong, try again!</p>";
+      }
+    }
+
     require_once 'db_handler.php';
     require_once 'db_functions.php';
 
@@ -116,7 +127,28 @@
       echo "<td>" . $userInfo['lastName'] . "</td>";
       echo "<td>" . $subjectInfo['subject'] . "</td>";
       echo "<td>" . $tutoringProposal['description'] . "</td>";
-      echo "<td>" . "OK" . "</td>";
+      echo "<td>";
+      $tutorPropID = $tutoringProposal['$tutoringProposalID'];
+      $btnName = "tutorProdID" . $tutorPropID;
+      if (isset($_POST[$btnName])) {
+        // If they push the button for this tutorProposal, start session
+        if ($_SESSION["userID"] === $userInfo['userID']) {
+          header("location: tutor.php?error=idsmatch");
+          exit();
+        } else {
+          createTutorSession($conn, $_SESSION["userID"], $tutorPropID, 1);
+        }
+      }
+      if (tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID)) {
+        echo "Session Active";
+      } else {
+        echo "<form method=\"post\">
+                <button type=\"submit\" name=\"" . $btnName . "\">
+                  Start session
+                </button>
+              </form>";
+      }
+      echo "</td>";
       echo "</tr>";
     }
   ?>

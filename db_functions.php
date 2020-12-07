@@ -134,7 +134,7 @@ function getAllTutorProposals($conn) {
   $sql = "SELECT * FROM TutoringProposal";
   $stmt = mysqli_stmt_init($conn);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
-    header("location: tutor.php?error=stmtfailed");
+    header("location: tutor.php?error=sessionstmtfailed");
     exit();
   }
   mysqli_stmt_execute($stmt);
@@ -147,7 +147,7 @@ function getUserInfo($conn, $userID) {
   $sql = "SELECT * FROM User U WHERE U.userID = ?;";
   $stmt = mysqli_stmt_init($conn);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
-    header("location: tutor.php?error=stmtfailed");
+    header("location: tutor.php?error=sessionstmtfailed");
     exit();
   }
   mysqli_stmt_bind_param($stmt, "i", $userID);
@@ -165,7 +165,7 @@ function getSubjectInfo($conn, $subjectID) {
   $sql = "SELECT * FROM Subject S WHERE S.subjectID = ?;";
   $stmt = mysqli_stmt_init($conn);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
-    header("location: tutor.php?error=stmtfailed");
+    header("location: tutor.php?error=sessionstmtfailed");
     exit();
   }
   mysqli_stmt_bind_param($stmt, "i", $subjectID);
@@ -179,5 +179,40 @@ function getSubjectInfo($conn, $subjectID) {
   mysqli_stmt_close($stmt);
 }
 
+function tutorSessionExists($conn, $userID, $tutorPropID) {
+  $sql = "SELECT * FROM TutoringSession ts WHERE
+            ts.studentUserID = ? AND ts.tutorProposalID = ? AND ts.active = 1;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $userID, $tutorPropID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return true;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function createTutorSession($conn, $studentUserID, $tutorProposalID, $active) {
+  $sql = "INSERT INTO
+              TutoringSession (studentUserID, tutorProposalID, active)
+          VALUES
+              (?, ?, ?);";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "iii", $studentUserID, $tutorProposalID, $active);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=nonesession");
+  exit();
+}
 
 ?>

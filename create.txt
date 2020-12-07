@@ -35,11 +35,9 @@ CREATE TABLE TutoringProposal(
 CREATE TABLE TutoringSession(
   sessionID       int(11) AUTO_INCREMENT NOT NULL,
   studentUserID   int(11) NOT NULL,
-  tutorProposalID int(11) NOT NULL
-  subjectID       int(11) NOT NULL,
+  tutorProposalID int(11) NOT NULL,
   active          boolean NOT NULL,
   PRIMARY KEY     (sessionID),
   FOREIGN KEY     (studentUserID)   REFERENCES User(userID),
-  FOREIGN KEY     (tutorProposalID) REFERENCES TutoringProposal(tutoringProposalID),
-  FOREIGN KEY     (subjectID)       REFERENCES Subject(subjectID)
+  FOREIGN KEY     (tutorProposalID) REFERENCES TutoringProposal(tutoringProposalID)
 );
