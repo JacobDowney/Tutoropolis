@@ -1,6 +1,10 @@
+# Info for running project
+- If you set up XAMPP you can look at create.txt for instructions on how to create databases and how to get started
+
 # TODO's for project
 
 - Front end for every Page
+- Google Slides Presentation
 
 welcome.php
   - DONE: Login form with db_login.php
