@@ -16,4 +16,4 @@ user.php
 tutor.php
   - DONE: insert new tutor proposal
   - DONE: query for all tutor proposals
-  - create new session for proposal if selected
+  - DONE: create new session for proposal if selected

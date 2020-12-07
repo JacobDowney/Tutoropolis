@@ -31,12 +31,12 @@ CREATE TABLE TutoringProposal(
   FOREIGN KEY         (subjectID)   REFERENCES Subject(subjectID)
 );
 
-// Tutoring Session table
-CREATE TABLE TutoringSession(
+// Session table
+CREATE TABLE Session(
   sessionID       int(11) AUTO_INCREMENT NOT NULL,
   studentUserID   int(11) NOT NULL,
   tutorProposalID int(11) NOT NULL,
-  active          boolean NOT NULL,
+  active          tinyint(1) NOT NULL,
   PRIMARY KEY     (sessionID),
   FOREIGN KEY     (studentUserID)   REFERENCES User(userID),
   FOREIGN KEY     (tutorProposalID) REFERENCES TutoringProposal(tutoringProposalID)

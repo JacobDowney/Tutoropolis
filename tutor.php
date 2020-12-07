@@ -111,8 +111,8 @@
     require_once 'db_handler.php';
     require_once 'db_functions.php';
 
-    $allTutoringProposals = getAllTutorProposals($conn);
-    foreach ($allTutoringProposals as $tutoringProposal) {
+    $allTutoringProposalResults = getAllTutorProposals($conn);
+    while ($tutoringProposal = mysqli_fetch_assoc($allTutoringProposalResults)) {
       $userInfo = getUserInfo($conn, $tutoringProposal['tutorUserID']);
       if ($userInfo === false) {
         continue;
@@ -128,7 +128,7 @@
       echo "<td>" . $subjectInfo['subject'] . "</td>";
       echo "<td>" . $tutoringProposal['description'] . "</td>";
       echo "<td>";
-      $tutorPropID = $tutoringProposal['$tutoringProposalID'];
+      $tutorPropID = $tutoringProposal['tutoringProposalID'];
       $btnName = "tutorProdID" . $tutorPropID;
       if (isset($_POST[$btnName])) {
         // If they push the button for this tutorProposal, start session
@@ -136,7 +136,7 @@
           header("location: tutor.php?error=idsmatch");
           exit();
         } else {
-          createTutorSession($conn, $_SESSION["userID"], $tutorPropID, 1);
+          createSession($conn, $_SESSION["userID"], $tutorPropID, 1);
         }
       }
       if (tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID)) {
