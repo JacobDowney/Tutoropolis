@@ -83,7 +83,7 @@
     ?>
   </div>
 
-  <h2>Table of tutor info (comes from sql query)</h2>
+  <h2>Posts from tutors</h2>
   <p>Phone number and email will be shown once a session begins</p>
 
   <table border=1 class=\"tutor-proposal-table\">
