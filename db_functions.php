@@ -181,7 +181,7 @@ function getSubjectInfo($conn, $subjectID) {
 
 function tutorSessionExists($conn, $userID, $tutorPropID) {
   $sql = "SELECT * FROM Session s WHERE
-            s.studentUserID = ? AND s.tutorProposalID = ? AND s.active = 1;";
+            s.studentUserID = ? AND s.tutorProposalID = ?;";
   $stmt = mysqli_stmt_init($conn);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
     header("location: tutor.php?error=sessionstmtfailed");
@@ -191,28 +191,156 @@ function tutorSessionExists($conn, $userID, $tutorPropID) {
   mysqli_stmt_execute($stmt);
   $resultData = mysqli_stmt_get_result($stmt);
   if ($row = mysqli_fetch_assoc($resultData)) {
-    return true;
+    return $row['active'] + 1;
+  } else {
+    return 0;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function createSession($conn, $studentUserID, $tutorProposalID) {
+  $sql = "INSERT INTO
+              Session (studentUserID, tutorProposalID, active)
+          VALUES
+              (?, ?, 1);";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $studentUserID, $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=nonesession");
+  exit();
+}
+
+function updateSession($conn, $studentUserID, $tutorProposalID) {
+  $sql = "UPDATE Session
+          SET
+              active = 1
+          WHERE
+              studentUserID = ? AND tutorProposalID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $studentUserID, $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=nonesession");
+  exit();
+}
+
+
+// Updates the user information
+function updateUser($conn, $userID, $username, $firstName, $lastName,
+                    $phoneNumber, $email, $biography) {
+  $sql = "UPDATE User
+          SET
+              username = ?, firstName = ?, lastName = ?, phoneNumber = ?,
+              email = ?, biography = ?
+          WHERE
+              userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: user.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ssssssi", $username, $firstName, $lastName,
+                          $phoneNumber, $email, $biography, $userID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: user.php?error=none");
+  exit();
+}
+
+// Updates the user password
+function updatePassword($conn, $userID, $password) {
+  $sql = "UPDATE User
+          SET
+              password = ?
+          WHERE
+              userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: user.php?error=passstmtfailed");
+    exit();
+  }
+  $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+  mysqli_stmt_bind_param($stmt, "si", $hashedPassword, $userID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: user.php?error=none");
+  exit();
+}
+
+function getAllSessionsForUser($conn, $userID) {
+  $sql = "SELECT * FROM Session s WHERE s.studentUserID = ? ORDER BY s.active DESC;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $userID);
+  mysqli_stmt_execute($stmt);
+  return mysqli_stmt_get_result($stmt);
+  //return mysqli_fetch_all($resultData, MYSQLI_ASSOC);
+  mysqli_stmt_close($stmt);
+}
+
+function getTutorProposal($conn, $tutorProposalID) {
+  $sql = "SELECT * FROM TutoringProposal tp WHERE tp.tutoringProposalID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailedyo");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
   } else {
     return false;
   }
   mysqli_stmt_close($stmt);
 }
 
-function createSession($conn, $studentUserID, $tutorProposalID, $active) {
-  $sql = "INSERT INTO
-              Session (studentUserID, tutorProposalID, active)
-          VALUES
-              (?, ?, ?);";
+function updateActive($conn, $sessionID, $active) {
+  if ($active === 1) {
+    $active = 0;
+  } else {
+    $active = 1;
+  }
+  $sql = "UPDATE Session
+          SET
+              active = ?
+          WHERE
+              sessionID = ?;";
   $stmt = mysqli_stmt_init($conn);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
-    header("location: home.php");
+    header("location: home.php?error=stmtfailed");
     exit();
   }
-  mysqli_stmt_bind_param($stmt, "iii", $studentUserID, $tutorProposalID, $active);
+  mysqli_stmt_bind_param($stmt, "ii", $active, $sessionID);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
-  header("location: tutor.php?error=nonesession");
+  header("location: home.php?error=none");
   exit();
+}
+
+function getAllSessions($conn) {
+  $sql = "SELECT * FROM Session s ORDER BY s.studentUserID DESC;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=lowstmtfailed");
+    exit();
+  }
+  mysqli_stmt_execute($stmt);
+  return mysqli_stmt_get_result($stmt);
+  mysqli_stmt_close($stmt);
 }
 
 ?>

@@ -130,16 +130,19 @@
       echo "<td>";
       $tutorPropID = $tutoringProposal['tutoringProposalID'];
       $btnName = "tutorProdID" . $tutorPropID;
+      $isActive = tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID);
       if (isset($_POST[$btnName])) {
         // If they push the button for this tutorProposal, start session
         if ($_SESSION["userID"] === $userInfo['userID']) {
           header("location: tutor.php?error=idsmatch");
           exit();
+        } else if ($isActive === 0) {
+          createSession($conn, $_SESSION["userID"], $tutorPropID);
         } else {
-          createSession($conn, $_SESSION["userID"], $tutorPropID, 1);
+          updateSession($conn, $_SESSION["userID"], $tutorPropID);
         }
       }
-      if (tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID)) {
+      if ($isActive === 2) {
         echo "Session Active";
       } else {
         echo "<form method=\"post\">

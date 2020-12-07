@@ -43,38 +43,80 @@
   </div>
 
   <div class="update-user-info-form">
-    <h1>My user info (comes from sql query)</h1>
-    <form>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" value="SQL-USNM" />
-      </div>
+    <h2>User Profile</h2>
+    <?php
+      // Code for error checking
+      if (isset($_GET["error"])) {
+        if ($_GET["error"] == "emptyinput") {
+          echo "<p>Fill in all fields!</p>";
+        } else if ($_GET["error"] == "invalidusername") {
+          echo "<p>Invalid username!</p>";
+        } else if ($_GET["error"] == "invalidemail") {
+          echo "<p>Invalid email!</p>";
+        } else if ($_GET["error"] == "usernametaken") {
+          echo "<p>Username taken!</p>";
+        } else if ($_GET["error"] == "stmtfailed") {
+          echo "<p>Something went wrong, try again!</p>";
+        } else if ($_GET["error"] == "none") {
+          echo "<p>You have updated your profile!</p>";
+        }
+      }
+      // Require statements for conn and functions
+      require_once 'db_handler.php';
+      require_once 'db_functions.php';
+
+      $userInfo = getUserInfo($conn, $_SESSION['userID']);
+      if ($userInfo === false) {
+        echo "<h2>Failed to find user info!</h2>";
+      } else {
+        echo "<form action=\"db_updateuser.php\" method=\"post\">";
+        $properties = array("username" => "Username: ", "firstName" => "First Name: ",
+                            "lastName" => "Last Name: ", "phoneNumber" => "Phone Number: ",
+                            "email" => "Email Address: ", "biography" => "Biography");
+        foreach($properties as $key => $value) {
+          echo "<div class=\"form-group\">
+                  <label for=\"" . $key . "\">" . $value . "</label>
+                  <input type=\"text\" class=\"form-control\" name=\"" . $key . "\" value=\"" . $userInfo[$key] . "\" />
+                </div>";
+        }
+        echo "<button type=\"submit\" name=\"submit\" class=\"submit-button\">Update</button>";
+        echo "</form>";
+      }
+    ?>
+
+    <br><br>
+
+    <h2>Change Password</h2>
+    <?php
+    // Code for error checking
+      if (isset($_GET["error"])) {
+        if ($_GET["error"] == "emptyinput") {
+          echo "<p>Fill in all fields!</p>";
+        } else if ($_GET["error"] == "passwordsdontmatch") {
+          echo "<p>Passwords don't match!</p>";
+        } else if ($_GET["error"] == "passwordweak") {
+          echo "<p>Password must be 8 characters long</p>";
+        } else if ($_GET["error"] == "usernametaken") {
+          echo "<p>Username taken!</p>";
+        } else if ($_GET["error"] == "passstmtfailed") {
+          echo "<p>Something went wrong, try again!</p>";
+        } else if ($_GET["error"] == "none") {
+          echo "<p>You have updated your password!</p>";
+        }
+      }
+    ?>
+    <form action="db_updatepassword.php" method="post">
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="text" class="form-control" id="password" value="SQL-PSWD" />
+        <input type="text" class="form-control" name="password" />
       </div>
       <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" class="form-control" id="firstName" value="SQL-FNM" />
+        <label for="repassword">Password Again</label>
+        <input type="text" class="form-control" name="repassword" />
       </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" id="lastName" value="SQL-LNM" />
-      </div>
-      <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input type="text" class="form-control" id="phoneNumber" value="SQL-PNM" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="text" class="form-control" id="email" value="SQL-EML" />
-      </div>
-      <div class="form-group">
-        <label for="biography">Biography</label>
-        <input type="text" class="form-control" id="biography" value="SQL-BIO" />
-      </div>
-      <input type="submit" class="submit-button">
+      <button type="submit" name="submit" class="submit-button">Reset Password</button>
     </form>
+
   </div>
 
 </body>
