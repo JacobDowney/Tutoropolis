@@ -53,10 +53,10 @@
       echo "<h4>Hello There, " . $_SESSION["username"] . "</h4>";
     ?>
   </div>
-  <div style="display : flex; flex-direction : row ; margin-top : -20px ">
+  <div style="display : flex; flex-direction : row ; margin-top : -50px ">
     <div class="update-user-info-form" >
       <h2>User Profile</h2>
-        <div style="width: 200px;background-color: #B0E0E6; border: 2px solid black; border-radius: 5px">
+        <div style="width: 300px;background-color: #B0E0E6; border: 2px solid black; border-radius: 5px">
           <?php
             // Code for error checking
             
@@ -74,8 +74,8 @@
                                   "email" => "Email Address: ", "biography" => "Biography");
               foreach($properties as $key => $value) {
                 echo "<div class=\"form-group\" >
-                        <label for=\"" . $key . "\">" . $value . "</label>
-                        <input type=\"text\"  class=\"form-control\" name=\"" . $key . "\" value=\"" . $userInfo[$key] . "\" />
+                        <label  for=\"" . $key . "\">" . $value . "</label>
+                        <input style=\"font-size: 20px\" type=\"text\"  class=\"form-control\" name=\"" . $key . "\" value=\"" . $userInfo[$key] . "\" />
                       </div>";
               }
               echo "<button style=\"margin-top: 10px; height : 30px ;background-color: white\" type=\"submit\" name=\"submit\" class=\"submit-button\">Update</button>";
@@ -104,16 +104,16 @@
 
     <div class ="change-password" style=" margin-left:auto; margin-right:0;">
       <h2>Change Password</h2>
-      <div style="width: 200px;background-color: #B0E0E6; border: 2px solid black; border-radius: 5px">
+      <div style="width: 300px;background-color: #B0E0E6; border: 2px solid black; border-radius: 5px">
         
         <form action="db_updatepassword.php" method="post">
           <div class="form-group">
             <label for="password" style="font-size : 20px">Password</label>
-            <input type="text" class="form-control" name="password" />
+            <input type="text" class="form-control" name="password" style="font-size: 20px"/>
           </div>
           <div class="form-group">
             <label for="repassword" style="font-size : 20px">Password Again</label>
-            <input type="text" class="form-control" name="repassword" />
+            <input type="text" class="form-control" name="repassword" style="font-size: 20px" />
           </div>
           <button style="margin-top: 10px; height : 30px ;background-color: white" type="submit" name="submit" class="submit-button">Reset Password</button>
         </form>

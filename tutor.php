@@ -17,34 +17,46 @@
 <head>
   <title>Tutor Page</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <style>
+  h1   {color: black; height: 100px; line-height: 100px; text-align: center; font-size : 50px; background-color: #007cc7; border: 2px solid black; border-radius: 25px;}
+  h2  { font-size : 30px}
+  h3 {line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 5px;}
+  h4   {color: black; text-align: left; font-size : 50px; margin-top : -10px}
+  h5 {font-size : 30px ; background-color: #B0E0E6; border : 2px solid black; border-radius: 5px}
+  a {color : black}
+  label {font-size : 25px ; margin-right: 10px}
+ select{margin-right: 10px}
+  
+  </style>
 </head>
 
-<body>
+<body style="background-color : #A3BCB6">
 
   <h1 id='tt'>Tutoropolis</h1>
-
-  <div class="menu-button">
-    <a href="home.php">Home</a>
-  </div>
-  <div class="menu-button">
-    <a href="tutor.php">Tutors</a>
-  </div>
-  <div class="menu-button">
-    <a href="user.php">User</a>
-  </div>
-  <div class="menu-button">
-    <a href="welcome.php?error=logout">Logout</a>
+  <div style="display : flex; flex-direction : row ; margin-top: -61px ">
+    <h3 class="menu-button">
+      <a href="home.php">Home</a>
+    </h3>
+    <h3 class="menu-button">
+      <a href="tutor.php">Tutors</a>
+    </h3>
+    <h3 class="menu-button">
+      <a href="user.php">User</a>
+    </h3>
+    <h3 class="menu-button">
+      <a href="welcome.php?error=logout">Logout</a>
+    </h3>
   </div>
 
   <div class="hello-message">
     <?php
-      echo "<h2>Hello there " . $_SESSION["username"] . "</h2>";
+      echo "<h4>Hello There, " . $_SESSION["username"] . "</h4>";
     ?>
   </div>
 
   <div class="tutor-proposal-form">
-    <h1>Post a tutoring service</h1>
-    <form action="db_tutorproposal.php" method="post">
+    <h5>Post a tutoring service
+    <form action="db_tutorproposal.php" method="post" style="display : flex ; flex-direction: row;">
       <div class="form-group">
         <label for="subject">Subject</label>
         <select name="subject" class="form-control">
@@ -63,10 +75,11 @@
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="text" class="form-control" name="description" />
+        <input type="text" class="form-control" name="description"style="width : 250px;" />
       </div>
       <button type="submit" name="submit" class="submit-button">Post</button>
     </form>
+    </h5>
     <?php
       // Code for error checking
       if (isset($_GET["error"])) {
@@ -83,8 +96,9 @@
     ?>
   </div>
 
-  <h2>Posts from tutors</h2>
-  <p>Phone number and email will be shown once a session begins</p>
+  <h5>Posts from tutors
+  <p style="font-size : 15px">Phone number and email will be shown once a session begins</p>
+  
 
   <table border=1 class=\"tutor-proposal-table\">
     <tr class=\"tutor-proposal-table-labels\">
@@ -95,7 +109,7 @@
       <th>Description</th>
       <th>Session</th>
     </tr>
-
+    </h5>
   <?php
     // Code for error checking for sessions
     if (isset($_GET["error"])) {
