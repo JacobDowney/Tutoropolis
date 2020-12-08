@@ -2,9 +2,15 @@
 
 // Check that the user got to the page the proper way
 if (isset($_POST["submit"])) {
+  // Start session to get session data
+  session_start();
+  // Check if user is logged in and if not go to welcome page
+  if (!isset($_SESSION["userID"]) || !isset($_SESSION["username"])) {
+    header("location: welcome.php");
+    exit();
+  }
+
   $username     = $_POST['username'];
-  $password     = $_POST['password'];
-  $repassword   = $_POST['repassword'];
   $firstName    = $_POST['firstName'];
   $lastName     = $_POST['lastName'];
   $phoneNumber  = $_POST['phoneNumber'];
@@ -15,29 +21,19 @@ if (isset($_POST["submit"])) {
   require_once 'db_functions.php';
 
   // Checking for empty inputs
-  $arr = array($username, $password, $repassword, $firstName, $lastName, $phoneNumber, $email, $biography);
+  $arr = array($username, $firstName, $lastName, $phoneNumber, $email, $biography);
   if (emptyInputs($arr) !== false) {
-    header("location: welcome.php?error=emptyinput");
+    header("location: user.php?error=emptyinput");
     exit();
   }
   // Checking for invalid username
   if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
-    header("location: welcome.php?error=invalidusername");
+    header("location: user.php?error=invalidusername");
     exit();
   }
   // Checking for invalid email
   if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-    header("location: welcome.php?error=invalidemail");
-    exit();
-  }
-  // Checking if passwords match
-  if ($password !== $repassword) {
-    header("location: welcome.php?error=passwordsdontmatch");
-    exit();
-  }
-  // Checking if password is strong
-  if (strlen($password) < 8) {
-    header("location: welcome.php?error=passwordweak");
+    header("location: user.php?error=invalidemail");
     exit();
   }
   // Checking if the username already exists
@@ -46,10 +42,10 @@ if (isset($_POST["submit"])) {
     exit();
   }
 
-  createUser($conn, $username, $password, $firstName, $lastName, $phoneNumber, $email, $biography);
+  updateUser($conn, $_SESSION['userID'], $username, $firstName, $lastName, $phoneNumber, $email, $biography);
 
 }
 else {
-  header("location: welcome.php");
+  header("location: user.php");
   exit();
 }

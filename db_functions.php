@@ -1,84 +1,28 @@
 <?php
 
-// Checks if any of the fields are empty
-function emptyInputSignup($username, $password, $repassword, $firstName,
-                          $lastName, $phoneNumber, $email, $biography) {
-  $result;
-  // If any field is empty return true, else false
-  if (empty($username) || empty($password) || empty($repassword)
-      || empty($firstName) || empty($lastName) || empty($phoneNumber)
-      || empty($email) || empty($biography)) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
-}
-
-// Checks to make sure the username has only a-z, A-Z, and 0-9 characters
-function invalidUsername($username) {
-  $result;
-  // If there was an error matching the username, return true
-  if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
-}
-
-// Makes sure the email is a proper email
-function invalidEmail($email) {
-  $result;
-  if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
-}
-
-// Makes sure that the passwords match
-function passwordMatch($password, $repassword) {
-  $result;
-  // If they are not equal, there should be an error, true
-  if ($password !== $repassword) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
-}
-
-// Checks that the password is longer than 8 characters, to be strong
-function strongPassword($password) {
-  $result;
-  if (strlen($password) < 8) {
-    $result = true;
-  } else {
-    $result = false;
+// Checks for empty fields
+function emptyInputs($fields) {
+  $result = false;
+  foreach ($element as $fields) {
+    if (empty($element)) {
+      $return = true;
+      break;
+    }
   }
   return $result;
 }
 
 // Queries the sql database to see if the username exists
 function usernameExists($conn, $username) {
-  // Use a prepare statement to protect from sql injection
   $sql = "SELECT * FROM User U WHERE U.username = ?;";
-  // Initialize the sql statement
-  $statement = mysqli_stmt_init($conn);
-  // Check for mistake in sql statement
-  if (!mysqli_stmt_prepare($statement, $sql)) {
+  $statement = mysqli_stmt_init($conn); // Initialize statment
+  if (!mysqli_stmt_prepare($statement, $sql)) { // Make sure statement is valid
     header("location: welcome.php?error=stmtfailed");
     exit();
   }
-  // Bound data from user to statment (? fill in)
-  mysqli_stmt_bind_param($statement, "s", $username);
-  // Execute the command
+  mysqli_stmt_bind_param($statement, "s", $username); // Fill in ?'s'
   mysqli_stmt_execute($statement);
-  // Get the results from the sql command
   $resultData = mysqli_stmt_get_result($statement);
-  // Check if there is a result from the statement
   if ($row = mysqli_fetch_assoc($resultData)) {
     // This would be used for the login, this would return the user data
     // For sign up this will make next return false.
@@ -88,50 +32,30 @@ function usernameExists($conn, $username) {
     $result = false;
     return $result;
   }
-  // Close the last statement
   mysqli_stmt_close($statement);
 }
 
 // Creates the user with the given information
 function createUser($conn, $username, $password, $firstName, $lastName,
                     $phoneNumber, $email, $biography) {
-  // Use a prepare statement to protect from sql injection
   $sql = "INSERT INTO
               User (username, password, firstName, lastName, phoneNumber, email,
                     biography)
           VALUES
               (?, ?, ?, ?, ?, ?, ?);";
-  // Initialize the sql statement
   $statement = mysqli_stmt_init($conn);
-  // Check for mistake in sql statement
   if (!mysqli_stmt_prepare($statement, $sql)) {
     header("location: welcome.php?error=stmtfailed");
     exit();
   }
-  // Hash the password
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-  // Bound data from user to statment (? fill in)
   mysqli_stmt_bind_param($statement, "sssssss", $username, $hashedPassword,
                           $firstName, $lastName, $phoneNumber, $email,
                           $biography);
-  // Execute the command
   mysqli_stmt_execute($statement);
-  // Close the last statement
   mysqli_stmt_close($statement);
   header("location: welcome.php?error=none");
   exit();
-}
-
-// Check for an empty username or password
-function emptyInputLogin($username, $password) {
-  $result;
-  // If any field is empty return true, else false
-  if (empty($username) || empty($password)) {
-    $result = true;
-  } else {
-    $result = false;
-  }
-  return $result;
 }
 
 // Gets the user information and then logs in that user and goes to home.php
@@ -166,5 +90,257 @@ function loginUser($conn, $username, $password) {
   }
 }
 
+// Gets the subject data for a given subject
+function getSubjectID($conn, $subject) {
+  $sql = "SELECT * FROM Subject S WHERE S.subject = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "s", $subject);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    $result = false;
+    return $result;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+// Creates a tutor proposal in the database and redirects to the tutor.php
+// with no error if it worked.
+function createTutorProposal($conn, $tutorUserID, $subjectID, $description) {
+  $sql = "INSERT INTO
+              TutoringProposal (tutorUserID, subjectID, description)
+          VALUES
+              (?, ?, ?);";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "iis", $tutorUserID, $subjectID, $description);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=none");
+  exit();
+}
+
+// Gets all tutor proposals
+function getAllTutorProposals($conn) {
+  $sql = "SELECT * FROM TutoringProposal";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_execute($stmt);
+  return mysqli_stmt_get_result($stmt);
+  //return mysqli_fetch_all($resultData, MYSQLI_ASSOC);
+  mysqli_stmt_close($stmt);
+}
+
+function getUserInfo($conn, $userID) {
+  $sql = "SELECT * FROM User U WHERE U.userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $userID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function getSubjectInfo($conn, $subjectID) {
+  $sql = "SELECT * FROM Subject S WHERE S.subjectID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $subjectID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function tutorSessionExists($conn, $userID, $tutorPropID) {
+  $sql = "SELECT * FROM Session s WHERE
+            s.studentUserID = ? AND s.tutorProposalID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=sessionstmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $userID, $tutorPropID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row['active'] + 1;
+  } else {
+    return 0;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function createSession($conn, $studentUserID, $tutorProposalID) {
+  $sql = "INSERT INTO
+              Session (studentUserID, tutorProposalID, active)
+          VALUES
+              (?, ?, 1);";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $studentUserID, $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=nonesession");
+  exit();
+}
+
+function updateSession($conn, $studentUserID, $tutorProposalID) {
+  $sql = "UPDATE Session
+          SET
+              active = 1
+          WHERE
+              studentUserID = ? AND tutorProposalID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: tutor.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $studentUserID, $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: tutor.php?error=nonesession");
+  exit();
+}
+
+
+// Updates the user information
+function updateUser($conn, $userID, $username, $firstName, $lastName,
+                    $phoneNumber, $email, $biography) {
+  $sql = "UPDATE User
+          SET
+              username = ?, firstName = ?, lastName = ?, phoneNumber = ?,
+              email = ?, biography = ?
+          WHERE
+              userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: user.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ssssssi", $username, $firstName, $lastName,
+                          $phoneNumber, $email, $biography, $userID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: user.php?error=none");
+  exit();
+}
+
+// Updates the user password
+function updatePassword($conn, $userID, $password) {
+  $sql = "UPDATE User
+          SET
+              password = ?
+          WHERE
+              userID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: user.php?error=passstmtfailed");
+    exit();
+  }
+  $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+  mysqli_stmt_bind_param($stmt, "si", $hashedPassword, $userID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: user.php?error=none");
+  exit();
+}
+
+function getAllSessionsForUser($conn, $userID) {
+  $sql = "SELECT * FROM Session s WHERE s.studentUserID = ? ORDER BY s.active DESC;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $userID);
+  mysqli_stmt_execute($stmt);
+  return mysqli_stmt_get_result($stmt);
+  //return mysqli_fetch_all($resultData, MYSQLI_ASSOC);
+  mysqli_stmt_close($stmt);
+}
+
+function getTutorProposal($conn, $tutorProposalID) {
+  $sql = "SELECT * FROM TutoringProposal tp WHERE tp.tutoringProposalID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailedyo");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $tutorProposalID);
+  mysqli_stmt_execute($stmt);
+  $resultData = mysqli_stmt_get_result($stmt);
+  if ($row = mysqli_fetch_assoc($resultData)) {
+    return $row;
+  } else {
+    return false;
+  }
+  mysqli_stmt_close($stmt);
+}
+
+function updateActive($conn, $sessionID, $active) {
+  if ($active === 1) {
+    $active = 0;
+  } else {
+    $active = 1;
+  }
+  $sql = "UPDATE Session
+          SET
+              active = ?
+          WHERE
+              sessionID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "ii", $active, $sessionID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: home.php?error=none");
+  exit();
+}
+
+function getAllSessions($conn) {
+  $sql = "SELECT * FROM Session s ORDER BY s.studentUserID DESC;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=lowstmtfailed");
+    exit();
+  }
+  mysqli_stmt_execute($stmt);
+  return mysqli_stmt_get_result($stmt);
+  mysqli_stmt_close($stmt);
+}
 
 ?>

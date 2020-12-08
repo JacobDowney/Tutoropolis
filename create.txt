@@ -1,3 +1,7 @@
+The website does not create any tables so you must first delete all tables that might exist
+from past attempts using "DROP TABLE tablename;" and create these tables one by one using
+the commands provided. This is all done in phpmyadmin
+
 // User table
 CREATE TABLE User(
   userID      int(11) AUTO_INCREMENT NOT NULL,
@@ -31,15 +35,44 @@ CREATE TABLE TutoringProposal(
   FOREIGN KEY         (subjectID)   REFERENCES Subject(subjectID)
 );
 
-// Tutoring Session table
-CREATE TABLE TutoringSession(
-  sessionID     int(11) AUTO_INCREMENT NOT NULL,
-  tutorUserID   int(11) NOT NULL,
-  studentUserID int(11) NOT NULL,
-  subjectID     int(11) NOT NULL,
-  active        boolean NOT NULL,
-  PRIMARY KEY   (sessionID),
-  FOREIGN KEY   (tutorUserID)   REFERENCES User(userID),
-  FOREIGN KEY   (studentUserID) REFERENCES User(userID),
-  FOREIGN KEY   (subjectID)     REFERENCES Subject(subjectID)
+// Session table
+CREATE TABLE Session(
+  sessionID       int(11) AUTO_INCREMENT NOT NULL,
+  studentUserID   int(11) NOT NULL,
+  tutorProposalID int(11) NOT NULL,
+  active          tinyint(1) NOT NULL,
+  PRIMARY KEY     (sessionID),
+  FOREIGN KEY     (studentUserID)   REFERENCES User(userID),
+  FOREIGN KEY     (tutorProposalID) REFERENCES TutoringProposal(tutoringProposalID)
 );
+
+Once all of the tables are created and you can see them in your "localhost:8080/Tutoropolis/phpmyadmin"
+browser (where you will execute the commands) you can sign up and create a user. This is done by
+going to the welcome.php page and filling out the info in the sign up area. When submitted you can
+actually check the User table in phpmyadmin and see if it worked correctly. If it did then it's userID
+should be 1. You are going to go into the phpmyadmin and execute this command which inserts the different
+subjects into the subject table with the adminID set to your user id for the user just created.
+
+INSERT INTO
+	Subject(subject, adminUserID)
+VALUES
+	("Computer Science", 1),
+	("Math", 1),
+        ("Engineering", 1),
+        ("Physics", 1),
+        ("Biology", 1),
+        ("Chemistry", 1),
+        ("Business", 1),
+        ("Writing", 1),
+        ("Languages", 1),
+        ("History", 1),
+        ("Art", 1);
+
+After that command is executed you will be able to use everything in the website. I suggest making
+a second user and submitting some tutoring proposals for different subjects. Then creating a third
+user and going in and creating a session for some of those tutoring proposals and them going to
+the home page and seeing that all of those proposals should be there. You should see three different
+usernames if you did it this way. One for the current user you are, then info for that second user
+you created the tutoring proposals for, then third for the admin that was the first user you created
+
+Site should not be fully functioning and you can test it more to see if you can find any bugs.

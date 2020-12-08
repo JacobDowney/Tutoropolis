@@ -9,7 +9,8 @@ if (isset($_POST["submit"])) {
   require_once 'db_functions.php';
 
   // Checking for empty inputs
-  if (emptyInputLogin($username, $password) !== false) {
+  $arr = array($username, $password);
+  if (emptyInputs($arr) !== false) {
     header("location: welcome.php?error=emptyinput");
     exit();
   }
