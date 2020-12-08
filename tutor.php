@@ -26,7 +26,7 @@
   a {color : black}
   label {font-size : 25px ; margin-right: 10px}
  select{margin-right: 10px}
-  
+
   </style>
 </head>
 
@@ -97,8 +97,10 @@
   </div>
 
   <h5>Posts from tutors
-  <p style="font-size : 15px">Phone number and email will be shown once a session begins</p>
-  
+  <p style="font-size : 15px">
+    Zoom number and more information will be shown once a session begins
+  </p>
+
 
   <table border=1 class=\"tutor-proposal-table\">
     <tr class=\"tutor-proposal-table-labels\">
@@ -144,24 +146,22 @@
       echo "<td>";
       $tutorPropID = $tutoringProposal['tutoringProposalID'];
       $btnName = "tutorProdID" . $tutorPropID;
-      $isActive = tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID);
+      $exists = tutorSessionExists($conn, $_SESSION["userID"], $tutorPropID);
       if (isset($_POST[$btnName])) {
         // If they push the button for this tutorProposal, start session
         if ($_SESSION["userID"] === $userInfo['userID']) {
           header("location: tutor.php?error=idsmatch");
           exit();
-        } else if ($isActive === 0) {
-          createSession($conn, $_SESSION["userID"], $tutorPropID);
         } else {
-          updateSession($conn, $_SESSION["userID"], $tutorPropID);
+          createSession($conn, $_SESSION["userID"], $tutorPropID);
         }
       }
-      if ($isActive === 2) {
-        echo "Session Active";
+      if ($exists) {
+        echo "Enrolled";
       } else {
         echo "<form method=\"post\">
                 <button type=\"submit\" name=\"" . $btnName . "\">
-                  Start session
+                  Enroll
                 </button>
               </form>";
       }

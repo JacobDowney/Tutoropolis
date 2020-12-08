@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <style>
   h1   {color: black; height: 100px; line-height: 100px; text-align: center; font-size : 50px; background-color: #007cc7; border: 2px solid black;
-    
+
 border-radius: 25px;}
   h2   {color: black; text-align: left; font-size : 30px ; background-color: #B0E0E6; border: 2px solid black; border-radius: 5px; width : 1197px}
   h3 {line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 5px;}
@@ -27,14 +27,14 @@ border-radius: 25px;}
   body {background-color:#A3BCB6}
   table {margin-top : -28px;background-color:#B0E0E6; border : 2px solid black; width : 1200px; height : 100px}
   a {color : black}
-  
+
   </style>
 </head>
 
 <body>
 
   <h1>Tutoropolis</h1>
-  
+
     <div style = "display : flex; flex-direction : row ; margin-top: -61px">
       <h3 class="menu-button">
         <a href="home.php" >Home</a>
@@ -49,7 +49,7 @@ border-radius: 25px;}
         <a href="welcome.php?error=logout">Logout</a>
       </h3>
     </div>
- 
+
 
   <div class="hello-message" >
     <?php
@@ -134,21 +134,11 @@ border-radius: 25px;}
       echo "<td>" . $admin['email'] . "</td>";
       echo "<td>" . $subject['subject'] . "</td>";
       echo "<td>" . $tutorProposal['description'] . "</td>";
-
-      $btnName = "active" . $session['sessionID'];
-      if (isset($_POST[$btnName])) {
-        updateActive($conn, $session['sessionID'], $session['active']);
+      if ($tutorProposal['active']) {
+        echo "<td>YES</td>";
+      } else {
+        echo "<td>NO</td>";
       }
-      $active = "NO";
-      if ($session['active']) {
-        $active = "YES";
-      }
-      echo "<td>
-              <form method=\"post\">
-                <button type=\"submit\" name=\"" . $btnName . "\">" . $active . "</button>
-              </form>
-            </td>";
-
       echo "</tr>";
     }
   ?>
@@ -238,10 +228,10 @@ border-radius: 25px;}
 
       $btnName = "active" . $session['sessionID'];
       if (isset($_POST[$btnName])) {
-        updateActive($conn, $session['sessionID'], $session['active']);
+        updateActive($conn, $tutorProposal['tutoringProposalID'], $tutorProposal['active']);
       }
       $active = "NO";
-      if ($session['active']) {
+      if ($tutorProposal['active']) {
         $active = "YES";
       }
       echo "<td>
