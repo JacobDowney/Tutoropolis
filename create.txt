@@ -30,6 +30,7 @@ CREATE TABLE TutoringProposal(
   tutorUserID         int(11) NOT NULL,
   subjectID           int(11) NOT NULL,
   description         text,
+  active              tinyint(1) NOT NULL,
   PRIMARY KEY         (tutoringProposalID),
   FOREIGN KEY         (tutorUserID) REFERENCES User(userID),
   FOREIGN KEY         (subjectID)   REFERENCES Subject(subjectID)
@@ -40,7 +41,6 @@ CREATE TABLE Session(
   sessionID       int(11) AUTO_INCREMENT NOT NULL,
   studentUserID   int(11) NOT NULL,
   tutorProposalID int(11) NOT NULL,
-  active          tinyint(1) NOT NULL,
   PRIMARY KEY     (sessionID),
   FOREIGN KEY     (studentUserID)   REFERENCES User(userID),
   FOREIGN KEY     (tutorProposalID) REFERENCES TutoringProposal(tutoringProposalID)
