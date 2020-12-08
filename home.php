@@ -17,48 +17,63 @@
 <head>
   <title>Home Page</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <style>
+  h1   {color: black; height: 100px; line-height: 100px; text-align: center; font-size : 50px; background-color: #007cc7; border: 2px solid black;
+    
+border-radius: 25px;}
+  h2   {color: black; text-align: left; font-size : 30px ; background-color: #B0E0E6; border: 2px solid black; border-radius: 5px; width : 1197px}
+  h3 {line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 5px;}
+  h4   {color: black; text-align: left; font-size : 50px; margin-top : -10px}
+  body {background-color:#A3BCB6}
+  table {margin-top : -28px;background-color:#B0E0E6; border : 2px solid black; width : 1200px; height : 100px}
+  a {color : black}
+  
+  </style>
 </head>
 
 <body>
 
   <h1>Tutoropolis</h1>
+  
+    <div style = "display : flex; flex-direction : row ; margin-top: -61px">
+      <h3 class="menu-button">
+        <a href="home.php" >Home</a>
+      </h3>
+      <h3 class="menu-button">
+        <a href="tutor.php">Tutors</a>
+      </h3>
+      <h3 class="menu-button">
+        <a href="user.php">User</a>
+      </h3>
+      <h3 class="menu-button">
+        <a href="welcome.php?error=logout">Logout</a>
+      </h3>
+    </div>
+ 
 
-  <div class="menu-button">
-    <a href="home.php">Home</a>
-  </div>
-  <div class="menu-button">
-    <a href="tutor.php">Tutors</a>
-  </div>
-  <div class="menu-button">
-    <a href="user.php">User</a>
-  </div>
-  <div class="menu-button">
-    <a href="welcome.php?error=logout">Logout</a>
-  </div>
-
-  <div class="hello-message">
+  <div class="hello-message" >
     <?php
-      echo "<h2>Hello there " . $_SESSION["username"] . "</h2>";
+      echo "<h4>Hello There, " . $_SESSION["username"] . "</h4>";
     ?>
   </div>
 
   <h2>Sessions as Student</h2>
-  <table border=1 class=\"student-session-table\">
-    <tr class=\"student-session-table-labels\">
+  <table border=1 class="student-session-table" >
+    <tr class="student-session-table-labels">
       <th>Student</th>
       <th colspan="5">Tutor</th>
       <th colspan="3">Admin</th>
       <th colspan="3">Session</th>
     </tr>
-    <tr class=\"student-session-table-labels\">
+    <tr class="student-session-table-labels">
       <th>Username</th>
       <th>Username</th>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Phone</th>
+      <th>Zoom</th>
       <th>Email</th>
       <th>Username</th>
-      <th>Phone</th>
+      <th>Zoom</th>
       <th>Email</th>
       <th>Subject</th>
       <th>Description</th>
@@ -139,24 +154,25 @@
   ?>
   </table>
 
+
   <br><br>
   <h2>Sessions as Tutor</h2>
-  <table border=1 class=\"student-session-table\">
-    <tr class=\"tutor-session-table-labels\">
+  <table border=1 class="student-session-table">
+    <tr class="tutor-session-table-labels">
       <th>Tutor</th>
       <th colspan="5">Student</th>
       <th colspan="3">Admin</th>
       <th colspan="3">Session</th>
     </tr>
-    <tr class=\"tutor-session-table-labels\">
+    <tr class="tutor-session-table-labels">
       <th>Username</th>
       <th>Username</th>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Phone</th>
+      <th>Zoom</th>
       <th>Email</th>
       <th>Username</th>
-      <th>Phone</th>
+      <th>Zoom</th>
       <th>Email</th>
       <th>Subject</th>
       <th>Description</th>

@@ -8,7 +8,7 @@
   <style>
   h1   {color: black; text-align: center; font-size : 50px}
   h2   {color: black; text-align: center; font-size : 30px}
-  h3 {line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 25px;}
+  h3 {line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 5px;}
   label {font-size : 20px;display: inline-block;
     float: left;
     clear: left;
@@ -71,7 +71,7 @@
           <input type="text" class="form-control" name="lastName" />
         </div>
         <div class="form-group" style="margin-bottom : 20px; text-align: center">
-          <label for="phoneNumber">Phone Number</label>
+          <label for="phoneNumber">Zoom Number</label>
           <input type="text" class="form-control" name="phoneNumber" />
         </div>
         <div class="form-group" style="margin-bottom : 20px; text-align: center">

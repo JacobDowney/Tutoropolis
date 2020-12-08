@@ -252,6 +252,8 @@ function updateUser($conn, $userID, $username, $firstName, $lastName,
                           $phoneNumber, $email, $biography, $userID);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
+  session_start();
+  $_SESSION["username"] = $username;
   header("location: user.php?error=none");
   exit();
 }

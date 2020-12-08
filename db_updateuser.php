@@ -38,7 +38,7 @@ if (isset($_POST["submit"])) {
   }
   // Checking if the username already exists
   if (usernameExists($conn, $username) !== false) {
-    header("location: welcome.php?error=usernametaken");
+    header("location: user.php?error=usernametaken");
     exit();
   }
 
