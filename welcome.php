@@ -40,7 +40,7 @@
     }
   ?>
 
-  
+
 <div style="display : flex; flex-direction : row ;">
   <h3 >Sign up</h3>
   <h3 >Login</h3>
@@ -101,8 +101,6 @@
             echo "<p>Something went wrong, try again!</p>";
           } else if ($_GET["error"] == "usernametaken") {
             echo "<p>Username taken, choose another username!</p>";
-          } else if ($_GET["error"] == "none") {
-            echo "<p>You have signed up! Please Log In!</p>";
           }
         }
       ?>
@@ -112,7 +110,7 @@
 
 
     <div class="login-form" style ="line-height : 50px; width : 1000px; font-size: 30px;vertical-align : middle; text-align : center; background-color: #007cc7; border : 2px solid black; border-radius: 25px; "">
-    
+
       <form action="db_login.php" method="post" >
         <div class="form-group" style="margin-bottom : 20px; text-align: center">
           <label for="username">Username</label>
@@ -137,14 +135,14 @@
         }
       ?>
     </div>
-  
+
   </div >
-  
-    
-    
-  
-      
- 
+
+
+
+
+
+
 
 </body>
 

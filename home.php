@@ -57,13 +57,22 @@ border-radius: 25px;}
     ?>
   </div>
 
+  <?php
+    // Code for error checking for sessions
+    if (isset($_GET["error"])) {
+      if ($_GET["error"] == "deleted") {
+        echo "<p>Successfully Deleted session!</p>";
+      }
+    }
+  ?>
+
   <h2>Sessions as Student</h2>
   <table border=1 class="student-session-table" >
     <tr class="student-session-table-labels">
       <th>Student</th>
       <th colspan="5">Tutor</th>
       <th colspan="3">Admin</th>
-      <th colspan="3">Session</th>
+      <th colspan="4">Session</th>
     </tr>
     <tr class="student-session-table-labels">
       <th>Username</th>
@@ -78,6 +87,7 @@ border-radius: 25px;}
       <th>Subject</th>
       <th>Description</th>
       <th>Active</th>
+      <th>Delete</th>
     </tr>
   <?php
     // Code for error checking for sessions
@@ -139,6 +149,16 @@ border-radius: 25px;}
       } else {
         echo "<td>NO</td>";
       }
+      $stdDeleteBtn = "delete" . $session['sessionID'];
+      if (isset($_POST[$stdDeleteBtn])) {
+        deleteSession($conn, $session['sessionID']);
+      }
+      echo "<td>
+              <form method=\"post\">
+                <button type=\"submit\" name=\"" . $stdDeleteBtn . "\">DELETE</button>
+              </form>
+            </td>";
+
       echo "</tr>";
     }
   ?>
@@ -152,7 +172,7 @@ border-radius: 25px;}
       <th>Tutor</th>
       <th colspan="5">Student</th>
       <th colspan="3">Admin</th>
-      <th colspan="3">Session</th>
+      <th colspan="4">Session</th>
     </tr>
     <tr class="tutor-session-table-labels">
       <th>Username</th>
@@ -167,6 +187,7 @@ border-radius: 25px;}
       <th>Subject</th>
       <th>Description</th>
       <th>Active</th>
+      <th>Delete</th>
     </tr>
   <?php
     // Code for error checking for sessions
@@ -230,6 +251,10 @@ border-radius: 25px;}
       if (isset($_POST[$btnName])) {
         updateActive($conn, $tutorProposal['tutoringProposalID'], $tutorProposal['active']);
       }
+      $deleteButton = "delete" . $session['sessionID'];
+      if (isset($_POST[$deleteButton])) {
+        deleteSession($conn, $session['sessionID']);
+      }
       $active = "NO";
       if ($tutorProposal['active']) {
         $active = "YES";
@@ -237,6 +262,11 @@ border-radius: 25px;}
       echo "<td>
               <form method=\"post\">
                 <button type=\"submit\" name=\"" . $btnName . "\">" . $active . "</button>
+              </form>
+            </td>";
+      echo "<td>
+              <form method=\"post\">
+                <button type=\"submit\" name=\"" . $deleteButton . "\">DELETE</button>
               </form>
             </td>";
 

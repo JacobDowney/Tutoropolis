@@ -47,6 +47,7 @@ function createUser($conn, $username, $password, $firstName, $lastName,
   if (!mysqli_stmt_prepare($statement, $sql)) {
     header("location: welcome.php?error=stmtfailed");
     exit();
+    return 0;
   }
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
   mysqli_stmt_bind_param($statement, "sssssss", $username, $hashedPassword,
@@ -54,8 +55,7 @@ function createUser($conn, $username, $password, $firstName, $lastName,
                           $biography);
   mysqli_stmt_execute($statement);
   mysqli_stmt_close($statement);
-  header("location: welcome.php?error=none");
-  exit();
+  return 1;
 }
 
 // Gets the user information and then logs in that user and goes to home.php
@@ -323,6 +323,20 @@ function getAllSessions($conn) {
   mysqli_stmt_execute($stmt);
   return mysqli_stmt_get_result($stmt);
   mysqli_stmt_close($stmt);
+}
+
+function deleteSession($conn, $sessionID) {
+  $sql = "DELETE FROM Session WHERE sessionID = ?;";
+  $stmt = mysqli_stmt_init($conn);
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: home.php?error=stmtfailed");
+    exit();
+  }
+  mysqli_stmt_bind_param($stmt, "i", $sessionID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+  header("location: home.php?error=deleted");
+  exit();
 }
 
 ?>

@@ -46,8 +46,9 @@ if (isset($_POST["submit"])) {
     exit();
   }
 
-  createUser($conn, $username, $password, $firstName, $lastName, $phoneNumber, $email, $biography);
-
+  if (createUser($conn, $username, $password, $firstName, $lastName, $phoneNumber, $email, $biography)) {
+    loginUser($conn, $username, $password);
+  }
 }
 else {
   header("location: welcome.php");
